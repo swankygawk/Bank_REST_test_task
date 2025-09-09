@@ -9,8 +9,6 @@
 
 server:
     port: 8080
-    servlet:
-        context-path: /api/v1
 
 spring:
     application:
@@ -35,9 +33,7 @@ spring:
 
 logging:
     level:
-      root: ERROR
+      root: INFO
       com.example.bankcards: DEBUG
       org.hibernate.SQL: DEBUG
       org.hibernate.type.descriptor.sql: TRACE
-    file:
-        name: logs/bankcards.log
