@@ -32,3 +32,12 @@ spring:
         open-in-view: false
     liquibase:
         change-log: classpath:db/migration/changelog-main.yml
+
+logging:
+    level:
+      root: ERROR
+      com.example.bankcards: DEBUG
+      org.hibernate.SQL: DEBUG
+      org.hibernate.type.descriptor.sql: TRACE
+    file:
+        name: logs/bankcards.log

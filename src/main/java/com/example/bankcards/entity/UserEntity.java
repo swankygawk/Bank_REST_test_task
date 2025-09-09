@@ -16,7 +16,7 @@ import java.util.UUID;
 @Table(
     name = "users"
 )
-public class User {
+public class UserEntity {
     @Id
     @GeneratedValue(
         strategy = GenerationType.UUID
@@ -49,5 +49,5 @@ public class User {
         joinColumns = @JoinColumn(name = "user_id"),
         inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<Role> roles = new HashSet<>();
+    private Set<RoleEntity> roles = new HashSet<>();
 }
