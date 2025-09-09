@@ -1,0 +1,3 @@
+databaseChangeLog:
+    - include:
+        file: db/migration/changelog/001-create-users-and-roles-tables.yml

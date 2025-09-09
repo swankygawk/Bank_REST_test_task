@@ -1,0 +1,61 @@
+databaseChangeLog:
+    - changeSet:
+        id: 1
+        author: Andrey Nosov
+        changes:
+            - createTable:
+                tableName: users
+                columns:
+                    - column:
+                        name: id
+                        type: uuid
+                        constraints:
+                            primaryKey: true
+                            nullable: false
+                    - column:
+                        name: username
+                        type: varchar(50)
+                        constraints:
+                            unique: true
+                            nullable: false
+                    - column:
+                        name: password
+                        type: varchar(255)
+                        constraints:
+                            nullable: false
+            - createTable:
+                tableName: roles
+                columns:
+                    - column:
+                        name: id
+                        type: int
+                        autoIncrement: true
+                        constraints:
+                            primaryKey: true
+                            nullable: false
+                    - column:
+                          name: name
+                          type: varchar(20)
+                          constraints:
+                              unique: true
+                              nullable: false
+            - createTable:
+                tableName: users_roles
+                columns:
+                    - column:
+                        name: user_id
+                        type: uuid
+                        constraints:
+                            nullable: false
+                            foreignKeyName: fk_users_roles_user
+                            references: users(id)
+                    - column:
+                          name: role_id
+                          type: int
+                          constraints:
+                              nullable: false
+                              foreignKeyName: fk_users_roles_role
+                              references: roles(id)
+            - addPrimaryKey:
+                  tableName: users_roles
+                  columnNames: user_id, role_id
