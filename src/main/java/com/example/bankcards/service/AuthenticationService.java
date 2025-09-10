@@ -3,8 +3,8 @@ package com.example.bankcards.service;
 import com.example.bankcards.dto.JwtAuthenticationResponse;
 import com.example.bankcards.dto.LoginRequest;
 import com.example.bankcards.dto.SignUpRequest;
-import com.example.bankcards.entity.RoleEntity;
-import com.example.bankcards.entity.UserEntity;
+import com.example.bankcards.entity.Role;
+import com.example.bankcards.entity.User;
 import com.example.bankcards.repository.RoleRepository;
 import com.example.bankcards.repository.UserRepository;
 import com.example.bankcards.security.JwtService;
@@ -30,10 +30,10 @@ public class AuthenticationService {
             throw new IllegalArgumentException("Username " + request.username() + " is already taken");
         }
 
-        RoleEntity role = roleRepository.findByName("ROLE_USER")
+        Role role = roleRepository.findByName("ROLE_USER")
             .orElseThrow(() -> new IllegalStateException("Role ROLE_USER not found"));
 
-        UserEntity user = UserEntity.builder()
+        User user = User.builder()
             .username(request.username())
             .password(passwordEncoder.encode(request.password()))
             .roles(Set.of(role))
@@ -50,7 +50,7 @@ public class AuthenticationService {
             new UsernamePasswordAuthenticationToken(request.username(), request.password())
         );
 
-        UserEntity user = userRepository.findByUsername(request.username())
+        User user = userRepository.findByUsername(request.username())
             .orElseThrow(() -> new IllegalArgumentException("Invalid username"));
 
         String jwt = jwtService.generateJwt(user);
