@@ -1,5 +1,6 @@
 package com.example.bankcards.config;
 
+import com.example.bankcards.exception.ApplicationAuthenticationEntryPoint;
 import com.example.bankcards.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -22,6 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthFilter;
+    private final ApplicationAuthenticationEntryPoint applicationAuthenticationEntryPoint;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -40,12 +42,12 @@ public class SecurityConfig {
         http
             .csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .exceptionHandling(exception -> exception
+                .authenticationEntryPoint(applicationAuthenticationEntryPoint))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/v1/swagger-ui/**", "/api/v1/auth/**").permitAll()
-                .anyRequest().authenticated()
-            )
+                .anyRequest().authenticated())
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
