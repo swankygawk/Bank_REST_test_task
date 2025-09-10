@@ -24,7 +24,7 @@ public class AdminCardController {
 
     @PostMapping
     public ResponseEntity<CardResponse> createCard(@RequestBody @Valid CreateCardRequest request) {
-        CardResponse createdCard = adminCardService.createCard(request);
+        CardResponse createdCard = this.adminCardService.createCard(request);
         return new ResponseEntity<>(createdCard, HttpStatus.CREATED);
     }
 
@@ -33,13 +33,13 @@ public class AdminCardController {
         @PathVariable UUID id,
         @RequestBody @Valid UpdateCardStatusRequest request
     ) {
-        CardResponse updatedCard = adminCardService.updateCardStatus(id, request);
+        CardResponse updatedCard = this.adminCardService.updateCardStatus(id, request);
         return ResponseEntity.ok(updatedCard);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCard(@PathVariable UUID id) {
-        adminCardService.deleteCard(id);
+        this.adminCardService.deleteCard(id);
     }
 }
