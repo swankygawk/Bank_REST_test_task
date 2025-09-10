@@ -39,5 +39,5 @@ logging:
       org.hibernate.type.descriptor.sql: TRACE
 
 jwt:
-    secret: a9bcc18b67f6b075e1950d273a8a2b7272d3769c0f0d127c9ab5fe30b194c450
+    secret: 54ed12915ff41335900fbaa1d33ce53e28e359cc790f2eb58fd1e619eaa1e11c5ad429ea54e382ea15fb8db219f6e0f60b9f7d14b12fd1910157929abaeb8674
     expiration: 86400000 # ms (24 hours)
