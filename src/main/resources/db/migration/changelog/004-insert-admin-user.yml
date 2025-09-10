@@ -1,0 +1,21 @@
+databaseChangeLog:
+    - changeSet:
+        id: 4
+        author: Andrey Nosov
+        changes:
+            - insert:
+                tableName: users
+                columns:
+                    - column:
+                        name: id
+                        value: "96bf0fc0-3fd9-4597-8c9f-88b542861005"
+                    - column:
+                        name: username
+                        value: "admin"
+                    - column:
+                        name: password
+                        value: "$2a$10$JI8ZqFipFd0HmqpUx0SLjO1uZcpNlBwWam72mUt5P.nMaXl3bgkyW"
+            - sql:
+                  dbms: "postgresql"
+                  endDelimiter: ;
+                  sql: "INSERT INTO users_roles (user_id, role_id) VALUES ('96bf0fc0-3fd9-4597-8c9f-88b542861005', (SELECT id FROM roles WHERE name = 'ROLE_ADMIN'));"
