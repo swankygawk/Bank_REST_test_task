@@ -78,13 +78,10 @@ public class UserCardService {
             .collect(Collectors.toMap(Card::getId, Function.identity()));
 
         Card sourceCard = cardsMap.get(sourceCardId);
-        if (sourceCard == null) {
-            throw new EntityNotFoundException("Card with ID " + sourceCardId + " not found");
-        }
-
         Card destinationCard = cardsMap.get(destinationCardId);
-        if (destinationCard == null) {
-            throw new EntityNotFoundException("Card with ID " + sourceCardId + " not found");
+
+        if (sourceCard == null || destinationCard == null) {
+            throw new EntityNotFoundException("Card with ID " + (sourceCard == null ? sourceCardId : destinationCardId) + " not found");
         }
 
         if (!sourceCard.getHolder().getId().equals(user.getId())
@@ -93,16 +90,12 @@ public class UserCardService {
             throw new AccessDeniedException("You can only transfer money between your cards");
         }
 
-        if (sourceCard.getStatus() != CardStatus.ACTIVE) {
-            throw new IllegalStateException("Cannot transfer money due to source card being not active");
-        }
-
-        if (destinationCard.getStatus() != CardStatus.ACTIVE) {
-            throw new IllegalStateException("Cannot transfer money due to destination card being inactive");
+        if (sourceCard.getStatus() != CardStatus.ACTIVE || destinationCard.getStatus() != CardStatus.ACTIVE) {
+            throw new IllegalStateException("Cannot transfer money due to source or destination card being not active");
         }
 
         if (sourceCard.getBalance().compareTo(request.amount()) < 0) {
-            throw new IllegalStateException("Source card does not have enough money");
+            throw new IllegalStateException("Insufficient funds");
         }
 
         sourceCard.setBalance(sourceCard.getBalance().subtract(request.amount()));

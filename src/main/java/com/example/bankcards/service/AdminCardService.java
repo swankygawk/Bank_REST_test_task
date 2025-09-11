@@ -60,6 +60,10 @@ public class AdminCardService {
         Card card = cardRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("Card with ID " + id + " not found"));
 
+        if (request.newStatus().equals(CardStatus.EXPIRED)) {
+            throw new IllegalArgumentException("Cannot expire card manually");
+        }
+
         card.setStatus(request.newStatus());
         Card updatedCard = cardRepository.save(card);
 
