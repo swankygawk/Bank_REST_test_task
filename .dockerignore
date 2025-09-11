@@ -1,0 +1,16 @@
+# Build artifacts
+target/
+build/
+
+# Maven wrapper files
+.mvn/
+mvnw
+mvnw.cmd
+
+# IDE files
+.idea/
+.run/
+*.iml
+
+# Local environment variables
+.env

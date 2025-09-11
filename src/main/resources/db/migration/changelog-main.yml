@@ -1,0 +1,11 @@
+databaseChangeLog:
+    - include:
+        file: db/migration/changelog/001-create-users-and-roles-tables.yml
+    - include:
+        file: db/migration/changelog/002-insert-initial-roles.yml
+    - include:
+        file: db/migration/changelog/003-create-cards-table.yml
+    - include:
+        file: db/migration/changelog/004-insert-admin-user.yml
+    - include:
+        file: db/migration/changelog/005-add-card-number-hash.yml

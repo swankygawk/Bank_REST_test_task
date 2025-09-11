@@ -1,0 +1,606 @@
+openapi: 3.1.0
+info:
+    title: Bank Card Management API
+    description: Test task for Effective Mobile
+    version: 1.0.0
+    contact:
+        name: Andrey Nosov
+        email: andreynosov03@internet.ru
+        url: https://github.com/swankygawk
+    license:
+        name: MIT License
+        url: https://opensource.org/license/MIT
+servers:
+    - url: http://localhost:8080
+      description: Local development server
+tags:
+    - name: Authentication
+    - name: Admin
+    - name: User
+paths:
+    /api/v1/auth/signUp:
+        post:
+            tags: [ "Authentication" ]
+            summary: Sign up
+            description: Sign up as a new user and get JWT
+            operationId: signUp
+            requestBody:
+                description: Sign up data
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/SignUpRequest"
+            responses:
+                "200":
+                    description: Successful sign up
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/JwtAuthenticationResponse"
+                "400":
+                    description: Validation error or username already taken
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ErrorResponse"
+    /api/v1/auth/login:
+        post:
+            tags: [ "Authentication" ]
+            summary: Login
+            description: Login to get JWT
+            operationId: login
+            requestBody:
+                description: Login data
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/LoginRequest"
+            responses:
+                "200":
+                    description: Successful login
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/JwtAuthenticationResponse"
+                "400":
+                    description: Validation error
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ErrorResponse"
+                "401":
+                    description: Invalid username and/or password
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ErrorResponse"
+
+    /api/v1/admin/users:
+        get:
+            tags: [ "Admin" ]
+            summary: Get all users
+            description: Get all users list with pagination
+            operationId: getAllUsers
+            security:
+                - bearerAuth: []
+            parameters:
+                - $ref: "#/components/parameters/Page"
+                - $ref: "#/components/parameters/Size"
+                - $ref: "#/components/parameters/Sort"
+            responses:
+                "200":
+                    description: Page with users list
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    content:
+                                        type: array
+                                        items:
+                                            $ref: "#/components/schemas/UserResponse"
+                                    page:
+                                        $ref: "#/components/schemas/PageResponse"
+                "401":
+                    $ref: "#/components/responses/Unauthorized"
+                "403":
+                    $ref: "#/components/responses/Forbidden"
+
+    /api/v1/admin/cards:
+        get:
+            tags: [ "Admin" ]
+            summary: Get all cards
+            description: Get all cards list with pagination
+            operationId: getAllCards
+            security:
+                - bearerAuth: []
+            parameters:
+                - $ref: "#/components/parameters/Page"
+                - $ref: "#/components/parameters/Size"
+                - $ref: "#/components/parameters/Sort"
+            responses:
+                "200":
+                    description: Page with cards list
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    content:
+                                        type: array
+                                        items:
+                                            $ref: "#/components/schemas/CardResponse"
+                                    page:
+                                        $ref: "#/components/schemas/PageResponse"
+                "401":
+                    $ref: "#/components/responses/Unauthorized"
+                "403":
+                    $ref: "#/components/responses/Forbidden"
+
+        post:
+            tags: [ "Admin" ]
+            summary: Create new card
+            description: Create new card for provided user
+            operationId: createCard
+            security:
+                - bearerAuth: []
+            requestBody:
+                description: New card data
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/CreateCardRequest"
+            responses:
+                "201":
+                    description: Card created successfully
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/CardResponse"
+                "400":
+                    description: Validation error or card number is already taken
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ErrorResponse"
+                "401":
+                    $ref: "#/components/responses/Unauthorized"
+                "403":
+                    $ref: "#/components/responses/Forbidden"
+
+    /api/v1/admin/cards/{id}/status:
+        patch:
+            tags: [ "Admin" ]
+            summary: Update card status
+            description: Activate or block card
+            operationId: updateCard
+            security:
+                - bearerAuth: []
+            parameters:
+                - $ref: "#/components/parameters/CardId"
+            requestBody:
+                description: New card status
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/UpdateCardStatusRequest"
+            responses:
+                "200":
+                    description: Status updated successfully
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/CardResponse"
+                "400":
+                    description: Validation error or illegal new status
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ErrorResponse"
+                "401":
+                    $ref: "#/components/responses/Unauthorized"
+                "403":
+                    $ref: "#/components/responses/Forbidden"
+                "404":
+                    $ref: "#/components/responses/CardNotFound"
+
+    /api/v1/admin/cards/{id}:
+        delete:
+            tags: [ "Admin" ]
+            summary: Delete card
+            description: Delete card irrevocably
+            operationId: deleteCard
+            security:
+                - bearerAuth: []
+            parameters:
+                - $ref: "#/components/parameters/CardId"
+            responses:
+                "204":
+                    description: Card deleted successfully. No response body
+                "401":
+                    $ref: "#/components/responses/Unauthorized"
+                "403":
+                    $ref: "#/components/responses/Forbidden"
+                "404":
+                    $ref: "#/components/responses/CardNotFound"
+
+    /api/v1/cards:
+        get:
+            tags: [ "User" ]
+            summary: Get current user cards
+            description: Get all user cards with pagination
+            operationId: getUserCards
+            security:
+                - bearerAuth: []
+            parameters:
+                - $ref: "#/components/parameters/Page"
+                - $ref: "#/components/parameters/Size"
+                - $ref: "#/components/parameters/Sort"
+                - name: status
+                  in: query
+                  description: Filter by status
+                  schema:
+                      type: string
+                      description: Status
+                      enum: [ "ACTIVE", "BLOCKED", "EXPIRED" ]
+                      example: "ACTIVE"
+                - name: search
+                  in: query
+                  description: Search by last 4 digits
+                  schema:
+                      type: string
+                      description: Last 4 digits
+                      example: "7777"
+            responses:
+                "200":
+                    description: Page with cards list
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    content:
+                                        type: array
+                                        items:
+                                            $ref: "#/components/schemas/CardResponse"
+                                    page:
+                                        $ref: "#/components/schemas/PageResponse"
+                "401":
+                    $ref: "#/components/responses/Unauthorized"
+
+    /api/v1/cards/{id}/block:
+        patch:
+            tags: [ "User" ]
+            summary: Block card
+            description: Block user's card
+            operationId: blockCard
+            security:
+                - bearerAuth: []
+            parameters:
+                - $ref: "#/components/parameters/CardId"
+            responses:
+                "200":
+                    description: Card blocked successfully
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/CardResponse"
+                "400":
+                    description: Invalid request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ErrorResponse"
+                "401":
+                    $ref: "#/components/responses/Unauthorized"
+                "403":
+                    description: Insufficient permissions to block other user's card
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ErrorResponse"
+                "404":
+                    $ref: "#/components/responses/CardNotFound"
+
+    /api/v1/cards/transfer:
+        post:
+            tags: [ "User" ]
+            summary: Transfer money
+            description: Transfer money between own cards
+            operationId: transferMoney
+            security:
+                - bearerAuth: []
+            requestBody:
+                description: Transfer data
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/TransferRequest"
+            responses:
+                "200":
+                    description: Money transferred successfully. No response body
+                "400":
+                    description: Validation error or business-logic error
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ErrorResponse"
+                "401":
+                    $ref: "#/components/responses/Unauthorized"
+                "403":
+                    description: Insufficient permissions to user other user's card
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ErrorResponse"
+                "404":
+                    description: Source and/or destination card(s) not found
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ErrorResponse"
+
+components:
+    parameters:
+        Page:
+            name: page
+            in: query
+            description: Page number (starting at 0)
+            schema:
+                type: integer
+                default: 0
+        Size:
+            name: size
+            in: query
+            description: Page size
+            schema:
+                type: integer
+                default: 20
+        Sort:
+            name: sort
+            in: query
+            description: Sorting parameters (e. g. "username,dec")
+            schema:
+                type: string
+                example: "username,asc"
+        CardId:
+            name: id
+            in: path
+            required: true
+            description: Card ID
+            schema:
+                type: string
+                format: uuid
+                example: "f06cc84e-4482-46e9-b2b9-ee299f21da8c"
+
+    schemas:
+        SignUpRequest:
+            type: object
+            required: [ "username", "password" ]
+            properties:
+                username:
+                    type: string
+                    description: Username
+                    minLength: 5
+                    maxLength: 50
+                    example: "johndoe"
+                password:
+                    type: string
+                    description: Password
+                    format: password
+                    minLength: 8
+                    maxLength: 255
+                    example: "12345678"
+
+        LoginRequest:
+            type: object
+            required: [ "username", "password" ]
+            properties:
+                username:
+                    type: string
+                    description: Username
+                    example: "johndoe"
+                password:
+                    type: string
+                    description: Password
+                    format: password
+                    example: "12345678"
+
+        JwtAuthenticationResponse:
+            type: object
+            properties:
+                jwt:
+                    type: string
+                    description: JSON Web Token
+                    example: "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqb2huZG9lIiwiaWF0IjoxNzU3NTkzODIwLCJleHAiOjE3NTc2ODAyMjB9.BCBN5ovcUVQu8cLKeulLZZe1RYHArG_QWwS1guS-wDPbmAfFwunuRfJr8tUKCayPij_XgRtHA7cZH85YsYGrDA"
+
+        CreateCardRequest:
+            type: object
+            required: [ "userId", "number", "expiryDate", "initialBalance" ]
+            properties:
+                userId:
+                    type: string
+                    format: uuid
+                    description: User ID to create card for
+                    example: "a1490e34-b05b-4d1b-9cb4-de48a403b736"
+                number:
+                    type: string
+                    description: Card number (16 digits without spaces)
+                    pattern: "^\\d{16}$"
+                    example: "1111222233334444"
+                expiryDate:
+                    type: string
+                    description: The date the card will be valid until
+                    pattern: "^(0[1-9]|1[0-2])/(\\d{2})$"
+                    example: "01/30"
+                initialBalance:
+                    type: number
+                    format: double
+                    description: Initial card balance
+                    minimum: 0
+                    example: 1000.55
+
+        UpdateCardStatusRequest:
+            type: object
+            required: [ "newStatus" ]
+            properties:
+                newStatus:
+                    type: string
+                    description: New card status
+                    enum: ["ACTIVE", "BLOCKED"]
+                    example: "BLOCKED"
+
+        TransferRequest:
+            type: object
+            required: [ "sourceCardId", "destinationCardId", "amount" ]
+            properties:
+                sourceCardId:
+                    type: string
+                    format: uuid
+                    description: Card ID to withdraw from
+                    example: "302d9bc2-546c-4755-96cb-b96b17ac6866"
+                destinationCardId:
+                    type: string
+                    format: uuid
+                    description: Card ID to deposit to
+                    example: "4d871dce-36a3-4431-b190-66185591557c"
+                amount:
+                    type: number
+                    format: double
+                    description: Amount to transfer
+                    exclusiveMinimum: true
+                    minimum: 0
+                    example: 249.99
+
+        PageResponse:
+            type: object
+            properties:
+                size:
+                    type: integer
+                    description: "Elements number displayed on current page"
+                    default: 20
+                number:
+                    type: integer
+                    description: "Current page number"
+                    default: 0
+                totalElements:
+                    type: integer
+                    description: "Total elements number"
+                totalPages:
+                    type: integer
+                    description: "Total pages number"
+
+        CardResponse:
+            type: object
+            properties:
+                id:
+                    type: string
+                    format: uuid
+                    description: Card ID
+                    example: "e9d02abc-f7c8-4faa-aefb-71ef8e3ada4a"
+                number:
+                    type: string
+                    description: Masked card number
+                    example: "************4444"
+                expiryDate:
+                    type: string
+                    description: The date the card is valid until
+                    example: "01/30"
+                status:
+                    type: string
+                    enum: [ "ACTIVE", "BLOCKED", "EXPIRED" ]
+                    description: Card status
+                    example: "ACTIVE"
+                balance:
+                    type: number
+                    format: double
+                    description: Card balance
+                    example: 500.00
+                holder:
+                    $ref: "#/components/schemas/CardholderResponse"
+
+        CardholderResponse:
+            type: object
+            properties:
+                id:
+                    type: string
+                    format: uuid
+                    description: User (cardholder) ID
+                    example: "f06cf572-a575-42ab-85db-a277749e510e"
+                username:
+                    type: string
+                    description: Username of cardholder
+                    example: "johndoe"
+
+        UserResponse:
+            type: object
+            properties:
+                id:
+                    type: string
+                    format: uuid
+                    description: User ID
+                    example: "0f486b3c-c326-49ef-89bf-a58ab6c12cec"
+                username:
+                    type: string
+                    description: Username
+                    example: "johndoe"
+                roles:
+                    type: array
+                    items:
+                        type: string
+                        description: Role name
+                        example: "ROLE_USER"
+
+        ErrorResponse:
+            type: object
+            properties:
+                statusCode:
+                    type: integer
+                    description: Response status code
+                    example: 404
+                message:
+                    type: string
+                    description: Short error message
+                    example: "Resource not found"
+                description:
+                    type: string
+                    description: Detailed error description
+                    example: "Card with ID cbf0611b-efd1-4cab-be1f-6c2515a43a67 not found"
+                timestamp:
+                    type: string
+                    format: date-time
+                    description: Error timestamp
+                    example: "2025-09-11T14:46:27.8904444"
+
+    responses:
+        Unauthorized:
+            description: JWT is invalid or was not provided
+            content:
+                application/json:
+                    schema:
+                        $ref: "#/components/schemas/ErrorResponse"
+
+        Forbidden:
+            description: Access denied/insufficient permissions
+            content:
+                application/json:
+                    schema:
+                        $ref: "#/components/schemas/ErrorResponse"
+
+        CardNotFound:
+            description: Card with provided ID not found
+            content:
+                application/json:
+                    schema:
+                        $ref: "#/components/schemas/ErrorResponse"
+
+    securitySchemes:
+        bearerAuth:
+            type: http
+            scheme: bearer
+            bearerFormat: jwt
