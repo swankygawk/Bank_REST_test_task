@@ -18,7 +18,7 @@ pom.xml — файл для управления зависимостями пр
     </parent>
     <groupId>com.example</groupId>
     <artifactId>bankcards</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>bankcards</name>
     <description>Test task for Effective Mobile</description>
     <url/>
