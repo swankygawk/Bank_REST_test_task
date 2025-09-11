@@ -6,5 +6,4 @@ import jakarta.validation.constraints.NotNull;
 public record UpdateCardStatusRequest(
     @NotNull(message = "New status cannot be null")
     CardStatus newStatus
-) {
-}
+) {}

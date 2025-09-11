@@ -48,14 +48,15 @@ public class UserCardControllerTest {
         UUID userId = UUID.fromString(userIdStr);
         String username = WithMockCustomUser.class.getMethod("username").getDefaultValue().toString();
 
-        CardResponse.UserDto userDto = new CardResponse.UserDto(userId, username);
+        CardResponse.CardholderResponse response = new CardResponse.CardholderResponse(userId, username);
         Page<CardResponse> cards = new PageImpl<>(List.of(
             new CardResponse(
                 UUID.randomUUID(),
                 "",
                 "",
                 CardStatus.ACTIVE,
-                BigDecimal.TEN, userDto
+                BigDecimal.TEN,
+                response
             )
         ));
 

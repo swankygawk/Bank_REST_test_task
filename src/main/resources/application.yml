@@ -31,6 +31,10 @@ spring:
     liquibase:
         change-log: classpath:db/migration/changelog-main.yml
 
+springdoc:
+    swagger-ui:
+        url: /docs/specification.yml
+
 logging:
     level:
       root: INFO

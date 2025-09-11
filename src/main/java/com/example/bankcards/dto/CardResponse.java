@@ -11,9 +11,9 @@ public record CardResponse(
    String expiryDate,
    CardStatus status,
    BigDecimal balance,
-   UserDto holder
+   CardholderResponse holder
 ) {
-    public record UserDto(
+    public record CardholderResponse(
         UUID id,
         String username
     ) {}

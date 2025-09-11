@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CardMapper {
     public CardResponse mapToCardResponse(Card card) {
-        CardResponse.UserDto holderDto = new CardResponse.UserDto(
+        CardResponse.CardholderResponse holderDto = new CardResponse.CardholderResponse(
             card.getHolder().getId(),
             card.getHolder().getUsername()
         );
