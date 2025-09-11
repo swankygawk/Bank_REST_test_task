@@ -12,6 +12,8 @@ import com.example.bankcards.util.CardMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +31,12 @@ public class AdminCardService {
 
     @Value("${crypto.secret}")
     private String cryptoSecret;
+
+    @Transactional(readOnly = true)
+    public Page<CardResponse> getAllCards(Pageable pageable) {
+        Page<Card> cards = cardRepository.findAll(pageable);
+        return cards.map(cardMapper::mapToCardResponse);
+    }
 
     @Transactional
     public CardResponse createCard(CreateCardRequest request) {

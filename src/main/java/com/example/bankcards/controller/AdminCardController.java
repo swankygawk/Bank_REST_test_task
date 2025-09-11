@@ -6,6 +6,8 @@ import com.example.bankcards.dto.UpdateCardStatusRequest;
 import com.example.bankcards.service.AdminCardService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,6 +23,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AdminCardController {
     private final AdminCardService adminCardService;
+
+    @GetMapping
+    public ResponseEntity<Page<CardResponse>> getAllCards(Pageable pageable) {
+        Page<CardResponse> cards = adminCardService.getAllCards(pageable);
+        return ResponseEntity.ok(cards);
+    }
 
     @PostMapping
     public ResponseEntity<CardResponse> createCard(@RequestBody @Valid CreateCardRequest request) {
