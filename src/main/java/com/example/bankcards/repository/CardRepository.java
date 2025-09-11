@@ -9,5 +9,5 @@ import java.util.UUID;
 
 @Repository
 public interface CardRepository extends JpaRepository<Card, UUID>, JpaSpecificationExecutor<Card> {
-    boolean existsByNumber(String number);
+    boolean existsByNumberHash(String numberHash);
 }

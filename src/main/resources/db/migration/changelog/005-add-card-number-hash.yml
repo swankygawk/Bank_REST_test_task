@@ -1,0 +1,20 @@
+databaseChangeLog:
+    - changeSet:
+        id: 5
+        author: Andrey Nosov
+        changes:
+            - addColumn:
+                tableName: cards
+                columns:
+                    - column:
+                        name: number_hash
+                        type: varchar(255)
+                        constraints:
+                            nullable: false
+            - createIndex:
+                indexName: idx_card_number_hash
+                tableName: cards
+                columns:
+                    - column:
+                        name: number_hash
+                unique: true

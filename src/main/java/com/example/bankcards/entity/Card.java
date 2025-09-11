@@ -1,6 +1,7 @@
 package com.example.bankcards.entity;
 
 import com.example.bankcards.entity.enums.CardStatus;
+import com.example.bankcards.util.CryptoConverter;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -40,7 +41,15 @@ public class Card {
         unique = true,
         nullable = false
     )
+    @Convert(converter = CryptoConverter.class)
     private String number;
+
+    @Column(
+        name = "number_hash",
+        unique = true,
+        nullable = false
+    )
+    private String numberHash;
 
     @Column(
         name = "expiry_date",
