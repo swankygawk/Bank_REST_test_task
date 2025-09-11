@@ -8,6 +8,7 @@
 .env
 
 .idea/
+.run/
 
 # User-specific stuff
 .idea/**/workspace.xml

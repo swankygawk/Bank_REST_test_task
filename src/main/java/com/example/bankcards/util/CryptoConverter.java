@@ -17,7 +17,7 @@ public class CryptoConverter implements AttributeConverter<String, String> {
     private final Key key;
 
     public CryptoConverter(@Value("${crypto.secret}") String secret) {
-        byte[] keyBytes = secret.getBytes();
+        byte[] keyBytes = secret.substring(0, 32).getBytes();
         this.key = new SecretKeySpec(keyBytes, "AES");
     }
 

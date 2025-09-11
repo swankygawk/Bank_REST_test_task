@@ -5,9 +5,9 @@ spring:
     application:
         name: bankcards
     datasource:
-        url: jdbc:postgresql://localhost:5432/bankcards_db
-        username: bankcards_user
-        password: bankcards_password
+        url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/bankcards_db}
+        username: ${SPRING_DATASOURCE_USERNAME:bankcards_user}
+        password: ${SPRING_DATASOURCE_PASSWORD:bankcards_password}
         driver-class-name: org.postgresql.Driver
     jpa:
         database: postgresql
@@ -34,8 +34,8 @@ logging:
       org.hibernate.type.descriptor.sql: TRACE
 
 jwt:
-    secret: 54ed12915ff41335900fbaa1d33ce53e28e359cc790f2eb58fd1e619eaa1e11c5ad429ea54e382ea15fb8db219f6e0f60b9f7d14b12fd1910157929abaeb8674
+    secret: ${JWT_SECRET}
     expiration: 86400000 # ms (24 hours)
 
 crypto:
-    secret: 14be81435b18043d5a6619a4fcedfca7
+    secret: ${CRYPTO_SECRET}
